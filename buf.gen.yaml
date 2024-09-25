@@ -1,0 +1,17 @@
+version: v1
+managed:
+  enabled: true
+plugins:
+  - plugin: go
+    out: protos
+    opt: paths=source_relative
+  - plugin: go-grpc
+    out: protos
+    opt: paths=source_relative,require_unimplemented_servers=false
+  - plugin: grpc-gateway
+    out: protos
+    opt: paths=source_relative
+  - plugin: openapiv2
+    out: gen/openapiv2
+  - plugin: grpc-gateway-ts
+    out: gen/api-ts
