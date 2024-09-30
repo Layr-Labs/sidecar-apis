@@ -1,0 +1,134 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "eigenlayer/uniprint-data/v1/api.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Api"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/manifests": {
+      "post": {
+        "operationId": "Api_UploadManifest",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UploadManifestResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UploadManifestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1ManifestSignature": {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "string",
+          "format": "byte"
+        },
+        "r": {
+          "type": "string",
+          "format": "byte"
+        },
+        "s": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "v1UploadManifestRequest": {
+      "type": "object",
+      "properties": {
+        "avsAddress": {
+          "type": "string"
+        },
+        "erc20TokenAddress": {
+          "type": "string"
+        },
+        "totalAmount": {
+          "type": "string"
+        },
+        "paymentManifest": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "v1UploadManifestResponse": {
+      "type": "object",
+      "properties": {
+        "contentHash": {
+          "type": "string"
+        },
+        "contentUri": {
+          "type": "string"
+        },
+        "verificationHash": {
+          "type": "string"
+        },
+        "signature": {
+          "$ref": "#/definitions/v1ManifestSignature"
+        }
+      }
+    }
+  }
+}
