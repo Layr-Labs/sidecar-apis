@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package eigenlayer.uniprint_data.api.v1;
+
+option go_package = "github.com/Layr-Labs/uniprint_data/protos/eigenlayer/api/v1";
+
+import "google/api/annotations.proto";
+import "buf/validate/validate.proto";
+
+message ManifestSignature {
+  bytes v = 1;
+  bytes r = 2;
+  bytes s = 3;
+}
+
+message UploadManifestRequest {
+  string avs_address = 1;
+  string erc20_token_address = 2;
+  string total_amount = 3;
+  bytes payment_manifest = 4 [(buf.validate.field).bytes.max_len = 20971520]; // 20MB limit
+}
+
+message UploadManifestResponse {
+  string content_hash = 1;
+  string content_uri = 2;
+  string verification_hash = 3;
+  ManifestSignature signature = 4;
+}
+
+service Api {
+  rpc UploadManifest(UploadManifestRequest) returns (UploadManifestResponse) {
+    option (google.api.http) = {
+      post: "/v1/manifests"
+      body: "*"
+    };
+  }
+}
