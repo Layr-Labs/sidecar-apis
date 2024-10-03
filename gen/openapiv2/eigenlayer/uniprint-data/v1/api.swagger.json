@@ -78,6 +78,18 @@
         }
       }
     },
+    "v1Manifest": {
+      "type": "object",
+      "properties": {
+        "rewards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RewardAmount"
+          }
+        }
+      }
+    },
     "v1ManifestSignature": {
       "type": "object",
       "properties": {
@@ -95,6 +107,17 @@
         }
       }
     },
+    "v1RewardAmount": {
+      "type": "object",
+      "properties": {
+        "recipientAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
     "v1UploadManifestRequest": {
       "type": "object",
       "properties": {
@@ -104,12 +127,8 @@
         "erc20TokenAddress": {
           "type": "string"
         },
-        "totalAmount": {
-          "type": "string"
-        },
-        "paymentManifest": {
-          "type": "string",
-          "format": "byte"
+        "manifest": {
+          "$ref": "#/definitions/v1Manifest"
         }
       }
     },

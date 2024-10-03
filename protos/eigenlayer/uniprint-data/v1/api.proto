@@ -13,11 +13,19 @@ message ManifestSignature {
   bytes s = 3;
 }
 
+message RewardAmount {
+  string recipient_address = 1;
+  string amount = 2;
+}
+
+message Manifest {
+  repeated RewardAmount rewards = 1 [(buf.validate.field).repeated = { min_items: 100000; }];
+}
+
 message UploadManifestRequest {
   string avs_address = 1;
   string erc20_token_address = 2;
-  string total_amount = 3;
-  bytes payment_manifest = 4 [(buf.validate.field).bytes.max_len = 20971520]; // 20MB limit
+  Manifest manifest = 3;
 }
 
 message UploadManifestResponse {

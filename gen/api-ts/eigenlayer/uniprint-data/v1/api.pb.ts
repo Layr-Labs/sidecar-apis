@@ -11,11 +11,19 @@ export type ManifestSignature = {
   s?: Uint8Array
 }
 
+export type RewardAmount = {
+  recipientAddress?: string
+  amount?: string
+}
+
+export type Manifest = {
+  rewards?: RewardAmount[]
+}
+
 export type UploadManifestRequest = {
   avsAddress?: string
   erc20TokenAddress?: string
-  totalAmount?: string
-  paymentManifest?: Uint8Array
+  manifest?: Manifest
 }
 
 export type UploadManifestResponse = {
