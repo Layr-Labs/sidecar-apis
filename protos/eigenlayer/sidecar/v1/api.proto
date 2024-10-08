@@ -29,14 +29,14 @@ message GetStateRootResponse {
 service Rpc {
   rpc GetBlockHeight(GetBlockHeightRequest) returns (GetBlockHeightResponse) {
     option (google.api.http) = {
-      post: "/v1/latest-block"
+      post: "/rpc/v1/latest-block"
       body: "*"
     };
   }
 
   rpc GetStateRoot(GetStateRootRequest) returns (GetStateRootResponse) {
     option (google.api.http) = {
-      post: "/v1/state-roots/{blockNumber}"
+      post: "/rpc/v1/state-roots/{blockNumber}"
       body: "*"
     };
   }

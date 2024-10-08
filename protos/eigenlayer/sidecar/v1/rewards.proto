@@ -6,19 +6,6 @@ option go_package = "github.com/Layr-Labs/sidecar/protos/eigenlayer/rewards/v1";
 
 import "google/api/annotations.proto";
 
-message GetRewardsRootRequest {
-  uint64 blockNumber = 1;
-}
-
-message GetRewardsRootResponse {
-  string rewardsRoot = 1;
-}
-
-message GenerateClaimProofRequest {
-  string earner_address = 1;
-  repeated string tokens = 2;
-}
-
 message EarnerLeaf {
   string earner = 1;
   string earner_token_root = 2;
@@ -40,25 +27,71 @@ message Proof {
   repeated TokenLeaf token_leaves = 8;
 }
 
+message Reward {
+  string token = 1;
+  string amount = 2;
+}
+
+// RPC request/responses
+
+message GetRewardsRootRequest {
+  uint64 blockNumber = 1;
+}
+
+message GetRewardsRootResponse {
+  string rewardsRoot = 1;
+}
+
+message GenerateRewardsRequest {
+  string snapshot = 1;
+  optional bool respondWithRewardsData = 2;
+}
+
+message GenerateRewardsResponse {
+  string snapshot = 1;
+
+  // Returned if respondWithRewardsData is true in the request
+  optional Reward rewards = 2;
+}
+
+message GetRewardsForSnapshotRequest {
+  string snapshot = 1;
+}
+
+message GetRewardsForSnapshotResponse {
+  repeated Reward rewards = 1;
+}
+
+message GenerateClaimProofRequest {
+  string earnerAddress = 1;
+  repeated string tokens = 2;
+}
+
 message GenerateClaimProofResponse {
   Proof proof = 1;
 }
 
-message GetAvailableRewardsRequest {
-  string earner_address = 1;
-}
 
-message Reward {
-  string token = 1;
-  string amount = 2;
+message GetAvailableRewardsRequest {
+  string earnerAddress = 1;
 }
 
 message GetAvailableRewardsResponse {
   repeated Reward rewards = 1;
 }
 
+
+message GetTotalClaimedRewardsRequest {
+  string earnerAddress = 1;
+  optional uint64 blockNumber = 2;
+}
+
+message GetTotalClaimedRewardsResponse {
+  repeated Reward rewards = 1;
+}
+
 message GetAvailableRewardsTokensRequest {
-  string earner_address = 1;
+  string earnerAddress = 1;
 }
 
 message GetAvailableRewardsTokensResponse {
@@ -66,30 +99,65 @@ message GetAvailableRewardsTokensResponse {
 }
 
 service Rewards {
+
+  // GetRewardsRoot returns the rewards root for the given block number
   rpc GetRewardsRoot(GetRewardsRootRequest) returns (GetRewardsRootResponse) {
     option (google.api.http) = {
-      post: "/v1/rewards-roots/{blockNumber}"
+      post: "/rewards/v1/rewards-roots/{blockNumber}"
       body: "*"
     };
   }
 
+  // GenerateRewards generates rewards for the given snapshot.
+  // If respondWithRewardsData is true, the response will include the rewards data, otherwise
+  // the sidecar will cache the data to be requested later.
+  rpc GenerateRewards(GenerateRewardsRequest) returns (GenerateRewardsResponse) {
+    option (google.api.http) = {
+      post: "/rewards/v1/generate-rewards"
+      body: "*"
+    };
+  }
+
+  // GetRewardsForSnapshot returns the rewards for the provided snapshot.
+  // Useful if you generated the rewards and want to fetch them later.
+  rpc GetRewardsForSnapshot(GetRewardsForSnapshotRequest) returns (GetRewardsForSnapshotResponse) {
+    option (google.api.http) = {
+      post: "/rewards/v1/rewards"
+      body: "*"
+    };
+  }
+
+  // GenerateClaimProof generates a proof for the given earner address and tokens for claiming
+  // tokens against the RewardsCoordinator
   rpc GenerateClaimProof(GenerateClaimProofRequest) returns (GenerateClaimProofResponse) {
     option (google.api.http) = {
-      post: "/v1/claim-proof"
+      post: "/rewards/v1/claim-proof"
       body: "*"
     };
   }
 
+  // GetAvailableRewards returns the available rewards for the given earner address
+  // This takes the amount earned from the current active root and subtracts total claimed.
   rpc GetAvailableRewards(GetAvailableRewardsRequest) returns (GetAvailableRewardsResponse) {
     option (google.api.http) = {
-      post: "/v1/available-rewards"
+      post: "/rewards/v1/available-rewards"
       body: "*"
     };
   }
 
+  // GetTotalClaimedRewards returns the total claimed rewards for the given earner address
+  // BlockHeight is optional. If omitted, the latest block height is used.
+  rpc GetTotalClaimedRewards(GetAvailableRewardsRequest) returns (GetAvailableRewardsResponse) {
+    option (google.api.http) = {
+      post: "/rewards/v1/total-claimed-rewards"
+      body: "*"
+    };
+  }
+
+  // GetAvailableRewardsTokens returns the available rewards tokens for the given earner address
   rpc GetAvailableRewardsTokens(GetAvailableRewardsTokensRequest) returns (GetAvailableRewardsTokensResponse) {
     option (google.api.http) = {
-      post: "/v1/available-rewards-tokens"
+      post: "/rewards/v1/available-rewards-tokens"
       body: "*"
     };
   }
