@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package eigenlayer.sidecar.protocol.v1;
+
+option go_package = "github.com/Layr-Labs/sidecar/protos/eigenlayer/protocol/v1";
+
+import "google/api/annotations.proto";
+
+
+message GetRegisteredAvsForOperatorRequest {
+  string operatorAddress = 1;
+  optional uint64 blockHeight = 2;
+}
+
+message GetRegisteredAvsForOperatorResponse {
+  repeated string avsAddresses = 1;
+}
+
+message GetDelegatedStrategiesForOperatorRequest {
+  string operatorAddress = 1;
+  optional uint64 blockHeight = 2;
+}
+
+message GetDelegatedStrategiesForOperatorResponse {
+  repeated string strategyAddresses = 1;
+}
+
+message GetOpeartorDelegatedStakeForStrategyRequest {
+  string operatorAddress = 1;
+  string strategyAddress = 2;
+  optional uint64 blockHeight = 3;
+}
+
+message GetOpeartorDelegatedStakeForStrategyResponse {
+  string stake = 1;
+}
+
+message GetDelegatedStakersForOperatorRequest {
+  string operatorAddress = 1;
+  optional uint64 blockHeight = 2;
+  uint32 pageNumber = 3;
+  uint32 pageSize = 4;
+}
+
+message GetDelegatedStakersForOperatorResponse {
+  repeated string stakerAddresses = 1;
+}
+
+
+
+service Protocol {
+  // GetRegisteredAvsForOperator returns the list of registered AVs for a given operator
+  // BlockHeight is optional, otherwise latest is used.
+  rpc GetRegisteredAvsForOperator(GetRegisteredAvsForOperatorRequest) returns (GetRegisteredAvsForOperatorResponse) {
+    option (google.api.http) = {
+      get: "/protocol/v1/operator-avss"
+    };
+  }
+
+  // GetDelegatedStrategiesForOperator returns strategies an Operator has delegated
+  rpc GetDelegatedStrategiesForOperator(GetDelegatedStrategiesForOperatorRequest) returns (GetDelegatedStrategiesForOperatorResponse) {
+    option (google.api.http) = {
+      get: "/protocol/v1/operator-strategies"
+    };
+  }
+
+  // GetOpeartorDelegatedStakeForStrategy returns the amount of delegated stake for a given strategy for an operator
+  rpc GetOpeartorDelegatedStakeForStrategy(GetDelegatedStrategiesForOperatorRequest) returns (GetDelegatedStrategiesForOperatorResponse) {
+    option (google.api.http) = {
+      get: "/protocol/v1/operator-strategies"
+    };
+  }
+
+  // GetDelegatedStakersForOperator returns the list of stakers that have delegated to an operator.
+  // BlockHeight is optional, otherwise latest is used.
+  rpc GetDelegatedStakersForOperator(GetDelegatedStakersForOperatorRequest) returns (GetDelegatedStakersForOperatorResponse) {
+    option (google.api.http) = {
+      get: "/protocol/v1/operator-stakers"
+    };
+  }
+}
