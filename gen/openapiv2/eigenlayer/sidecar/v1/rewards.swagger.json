@@ -1,0 +1,332 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "eigenlayer/sidecar/v1/rewards.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Rewards"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/available-rewards": {
+      "post": {
+        "operationId": "Rewards_GetAvailableRewards",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAvailableRewardsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetAvailableRewardsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Rewards"
+        ]
+      }
+    },
+    "/v1/available-rewards-tokens": {
+      "post": {
+        "operationId": "Rewards_GetAvailableRewardsTokens",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAvailableRewardsTokensResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetAvailableRewardsTokensRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Rewards"
+        ]
+      }
+    },
+    "/v1/claim-proof": {
+      "post": {
+        "operationId": "Rewards_GenerateClaimProof",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GenerateClaimProofResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GenerateClaimProofRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Rewards"
+        ]
+      }
+    },
+    "/v1/rewards-roots/{blockNumber}": {
+      "post": {
+        "operationId": "Rewards_GetRewardsRoot",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetRewardsRootResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "blockNumber",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RewardsGetRewardsRootBody"
+            }
+          }
+        ],
+        "tags": [
+          "Rewards"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "RewardsGetRewardsRootBody": {
+      "type": "object"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1EarnerLeaf": {
+      "type": "object",
+      "properties": {
+        "earner": {
+          "type": "string"
+        },
+        "earnerTokenRoot": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GenerateClaimProofRequest": {
+      "type": "object",
+      "properties": {
+        "earnerAddress": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1GenerateClaimProofResponse": {
+      "type": "object",
+      "properties": {
+        "proof": {
+          "$ref": "#/definitions/v1Proof"
+        }
+      }
+    },
+    "v1GetAvailableRewardsRequest": {
+      "type": "object",
+      "properties": {
+        "earnerAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetAvailableRewardsResponse": {
+      "type": "object",
+      "properties": {
+        "rewards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Reward"
+          }
+        }
+      }
+    },
+    "v1GetAvailableRewardsTokensRequest": {
+      "type": "object",
+      "properties": {
+        "earnerAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetAvailableRewardsTokensResponse": {
+      "type": "object",
+      "properties": {
+        "tokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1GetRewardsRootResponse": {
+      "type": "object",
+      "properties": {
+        "rewardsRoot": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Proof": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "type": "string"
+        },
+        "rootIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "earnerIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "earnerTreeProof": {
+          "type": "string"
+        },
+        "earnerLeaf": {
+          "$ref": "#/definitions/v1EarnerLeaf"
+        },
+        "leafIndices": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "tokenTreeProofs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tokenLeaves": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TokenLeaf"
+          }
+        }
+      }
+    },
+    "v1Reward": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "v1TokenLeaf": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "cumulativeEarnings": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
